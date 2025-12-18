@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explora</title>
+    <link rel="stylesheet" href="./css/explora.css">
+  <link rel="icon" type="image/png" href="icono/logo-favico-sena-2.png">
+</head>
+<body>
+<header class="encabezado-inicio" id="encabezado-inicio">
+    <img src="img/logo-sena-blanco.png" alt="Logo SENA" />
+<div class="menu-links">
+  <a href="index.html">Bienvenida</a>
+  <a href="inicio.html">Inicio</a>
+</div>
+  <a href="explora.html" class="btn-explora">Explora</a>
+</header>
+
+  <!-- Banner con imágenes -->
+<div class="banner">
+  <div class="banner-imagenes">
+    <img src="img/foto_sony_1.JPG" alt="seleccion_colombia"/>
+    <img src="img/foto_sony_2.JPG" alt="seleccion_colombia">
+    <img src="img/foto_sony_3.JPG" alt="seleccion_colombia">
+  </div>
+</div>
+
+<!-- Sección verde con tarjeta -->
+<div class="seccion-verde">
+  <h2>Juego</h2>
+  <div class="tarjetas-contenedor">
+    <div class="tarjeta">
+      <h3>Juego</h3>
+      <iframe src="Juego/Juego de memoria.html" width="1000" height="700" style="border:0"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Sección blanca con PDF - DISEÑO ACTUALIZADO -->
+<div class="seccion-blanca">
+  <div class="cartilla-contenedor">
+    <div class="cartilla-preview">
+      <div class="pdf-mockup">
+        <embed src="assets/CARTILLA MANTENIMIENTO_ELECTROMECANICO.pdf" type="application/pdf" />
+      </div>
+    </div>
+    
+    <div class="cartilla-info">
+      <h3>Acerca sobre la cartilla</h3>
+      <p>
+        Aqui en esta cartilla esta toda la información del tecnólogo Mantenimiento Electromecánico Industrial
+      </p>
+      <a href="assets/cartilla.pdf" download="cartilla.pdf" class="btn-descargar">Visualizar</a>
+    </div>
+  </div>
+</div>
+
+ <!-- ===== FOOTER ===== -->
+<footer class="footer-index" id="footer-index">
+<div class="footer-content">
+  <div class="footer-info">
+    <h3>Carrera 48 # 6-40 Urb. Guayuriba</h3>
+    <p>servicioalciudadano@sena.edu.co</p>
+  </div>
+
+  <div class="footer-social-index">
+    <a href="https://www.facebook.com/SENAMeta/?locale=es_LA"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+    <a href="https://www.youtube.com/@SENAComunica"><img src="assets/icons/youtube.png" alt="YouTube"></a>
+    <a href="https://www.instagram.com/senacomunica/?hl=es-la"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+  </div>
+</div>
+
+<div class="footer-bottom-index">
+  <p>© 2025 Servicio Nacional de Aprendizaje SENA<br>Todos los derechos reservados.</p>
+</div>
+</footer>
+
+<!--SCRIPT EFECTO IMAGENES-->
+<script>
+  // Obtener todas las imágenes del banner
+  const imagenesDelBanner = document.querySelectorAll('.banner-imagenes img');
+  
+  imagenesDelBanner.forEach((imagen, index) => {
+    imagen.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      // Si la imagen ya está expandida, restaurar todas al tamaño normal
+      if (this.classList.contains('expandido')) {
+        imagenesDelBanner.forEach(img => {
+          img.classList.remove('expandido');
+          img.classList.remove('reducido');
+        });
+      } else {
+        // Expandir la imagen clickeada y reducir las demás
+        imagenesDelBanner.forEach((img, i) => {
+          if (i === index) {
+            img.classList.add('expandido');
+            img.classList.remove('reducido');
+          } else {
+            img.classList.add('reducido');
+            img.classList.remove('expandido');
+          }
+        });
+      }
+    });
+  });
+  
+  // Cerrar imagen expandida al hacer click fuera
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.banner-imagenes')) {
+      imagenesDelBanner.forEach(img => {
+        img.classList.remove('expandido');
+        img.classList.remove('reducido');
+      });
+    }
+  });
+</script>
+<!-- ===== SCRIPT EFECTO SCROLL ===== -->
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juego de Memoria con Niveles</title>
+  <link rel="shortcut icon" href="PARA_FAVICON.png" type="image/x-icon">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      transition: background 0.5s ease;
+    }
+
+    @font-face {
+      font-family: "Pocas";
+      src: url("./font/PocasTrial-Medium.otf") format("opentype");
+    }
+
+    h1 {
+      color: #000;
+      user-select: none;
+    }
+
+    #levelBtn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007832;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-family: "Pocas", sans-serif;
+      color: white;
+    }
+
+    #levelBtn:hover {
+      background-color: #0c0c0c;
+    }
+
+    .memory-game {
+      width: 900px;
+      max-width: 100%;
+      margin: 10px auto;
+      display: grid;
+      gap: 25px;
+      justify-content: center;
+    }
+
+    .card {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #ffffff;
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+
+    .card.flip {
+      transform: rotateY(180deg);
+    }
+
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+    }
+
+    .front {
+      background: white;
+      transform: rotateY(180deg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .front img {
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .back {
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Juego de Memoria<span id="level"></span></h1>
+<button id="levelBtn">Reiniciar</button>
+
+<div id="game" class="memory-game"></div>
+
+<script>
+  const texturaCarta = "carta.jpg";
+
+  /* 🔹 SOLO 1 NIVEL */
+  const imagenesPorNivel = {
+    1: ["4-4.jpg", "3-3.jpg", "2-2.jpg", "1-1.jpg"]
+  };
+
+  const niveles = {
+    1: { fondo: "#e2e2e2" }
+  };
+
+  let nivelActual = 1;
+
+  function cargarJuego() {
+    const images = imagenesPorNivel[nivelActual];
+    const cantidadParejas = images.length;
+
+    document.body.style.background = niveles[nivelActual].fondo;
+    // document.getElementById("level").textContent = nivelActual;  ← AQUÍ SE QUITÓ EL "1"
+
+    let cartas = [...images, ...images].sort(() => Math.random() - 0.5);
+
+    const game = document.getElementById("game");
+    game.innerHTML = "";
+
+    let columnas = 4;
+    game.style.gridTemplateColumns = `repeat(${columnas}, 1fr)`;
+
+    cartas.forEach((img) => {
+      const card = document.createElement("div");
+      card.classList.add("card");
+
+      card.innerHTML = `
+        <div class="front">
+          <img src="${img}">
+        </div>
+        <div class="back" style="background-image:url('${texturaCarta}')"></div>
+      `;
+
+      game.appendChild(card);
+    });
+
+    activarLogica();
+  }
+
+  function activarLogica() {
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+
+    function flipCard() {
+      if (lockBoard) return;
+      if (this === firstCard) return;
+
+      this.classList.add("flip");
+
+      if (!firstCard) {
+        firstCard = this;
+        return;
+      }
+
+      secondCard = this;
+      validarPareja();
+    }
+
+    function validarPareja() {
+      const img1 = firstCard.querySelector("img").src;
+      const img2 = secondCard.querySelector("img").src;
+
+      if (img1 === img2) {
+        bloquearParejas();
+      } else {
+        ocultarParejas();
+      }
+    }
+
+    function bloquearParejas() {
+      firstCard.removeEventListener("click", flipCard);
+      secondCard.removeEventListener("click", flipCard);
+      reset();
+      verificarVictoria();
+    }
+
+    function ocultarParejas() {
+      lockBoard = true;
+      setTimeout(() => {
+        firstCard.classList.remove("flip");
+        secondCard.classList.remove("flip");
+        reset();
+      }, 800);
+    }
+
+    function reset() {
+      firstCard = null;
+      secondCard = null;
+      lockBoard = false;
+    }
+
+    function verificarVictoria() {
+      const total = document.querySelectorAll(".card").length;
+      const volteadas = document.querySelectorAll(".flip").length;
+
+      if (volteadas === total) {
+        setTimeout(() => {
+          alert("¡Juego Completado!");
+        }, 300);
+      }
+    }
+
+    document.querySelectorAll(".card").forEach(card =>
+      card.addEventListener("click", flipCard)
+    );
+  }
+
+  /* 🔁 BOTÓN AHORA REINICIA EL JUEGO */
+  document.getElementById("levelBtn").addEventListener("click", () => {
+    cargarJuego();
+  });
+
+  cargarJuego();
+</script>
+
+</body>
+</html>
